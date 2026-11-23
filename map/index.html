@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>خريطة الموقع</title>
+<title>خريطة موقع ريادة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;500;700&display=swap" rel="stylesheet">
 <style>
@@ -36,8 +36,8 @@ header,section{display:flex;flex-direction:column;gap:22px}
 .node.wa{border-color:var(--hl);background:var(--hl);animation:pop .5s ease both,pulse 2.4s ease-in-out 2.6s infinite}
 .stem{position:relative;width:2px;height:34px;background:var(--ink);transform-origin:top;animation:grow .4s ease both}
 .stem::after{content:"";position:absolute;left:-4px;top:0;width:10px;height:10px;border-radius:50%;background:var(--hl);animation:travel 2.2s linear infinite;animation-delay:inherit}
-.fork{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,6vw,90px);padding-top:34px;width:min(720px,100%)}
-.fork::before{content:"";position:absolute;top:0;left:25%;right:25%;height:2px;background:var(--ink);transform-origin:center;animation:growx .6s ease both .5s}
+.fork{--g:clamp(12px,3vw,40px);position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--g);padding-top:34px;width:min(940px,100%)}
+.fork::before{content:"";position:absolute;top:0;left:calc((100% - 2*var(--g))/6);right:calc((100% - 2*var(--g))/6);height:2px;background:var(--ink);transform-origin:center;animation:growx .6s ease both .5s}
 .path{display:flex;flex-direction:column;align-items:center;position:relative}
 .path::before{content:"";position:absolute;top:-34px;width:2px;height:34px;background:var(--ink);transform-origin:top;animation:grow .3s ease both 1s}
 .path .tag{font-size:13px;font-weight:500;color:var(--soft);margin-bottom:8px}
@@ -60,7 +60,7 @@ header,section{display:flex;flex-direction:column;gap:22px}
 .num{font-size:13px;font-weight:700;color:var(--soft);direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
 .try{align-self:flex-start;font-weight:700;text-decoration:none;color:var(--ink);border-bottom:3px solid var(--hl);margin-top:4px}
 .try:focus-visible{outline:2px solid var(--hl);outline-offset:3px}
-@media (max-width:700px){.row{grid-template-columns:1fr}.node{min-width:0;padding:9px 12px;font-size:15px}.node.home{font-size:18px}}
+@media (max-width:700px){.fork{grid-template-columns:1fr;gap:34px;padding-top:0;width:min(320px,100%)}.fork::before,.path::before{display:none}.path{border:1.5px dashed var(--line);border-radius:18px;padding:16px 12px}.row{grid-template-columns:1fr}.node{min-width:0;padding:9px 12px;font-size:15px}.node.home{font-size:18px}}
 
 .mini{position:relative;height:170px;border-radius:12px;background:var(--stage);overflow:hidden;direction:ltr}
 .thumb{position:absolute;right:8px;top:10px;bottom:10px;width:4px;border-radius:4px;background:#2E332F}
@@ -106,6 +106,14 @@ header,section{display:flex;flex-direction:column;gap:22px}
 .chat i{height:26px;border-radius:13px 13px 4px 13px;background:var(--hl);align-self:flex-end;animation:send 4.5s ease infinite}
 .chat i:nth-child(1){width:70%;animation-delay:.3s}.chat i:nth-child(2){width:50%;animation-delay:.9s}.chat i:nth-child(3){width:60%;height:34px;background:#fff;align-self:flex-start;border-radius:13px 13px 13px 4px;animation-delay:2s}
 @keyframes send{0%,5%{transform:translateY(30px) scale(.6);opacity:0}15%,88%{transform:none;opacity:1}100%{opacity:0}}
+/* street */
+.street{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:space-around;padding:0 34px 34px 22px;border-bottom:0}
+.street::after{content:"";position:absolute;left:0;right:0;bottom:30px;height:2px;background:#2E332F}
+.street i{width:46px;border-radius:4px 4px 0 0;background:linear-gradient(#2E332F 0 34px,transparent 34px),linear-gradient(90deg,transparent 20px,#5A605B 20px 26px,transparent 26px);animation:lit 6s ease-in-out infinite}
+.street i:nth-child(1){height:70px}.street i:nth-child(2){height:104px;animation-name:lit2}.street i:nth-child(3){height:84px;animation-name:lit3}
+@keyframes lit{0%,10%{filter:none}20%,78%{filter:drop-shadow(0 0 10px #06CC3B) brightness(4)}100%{filter:none}}
+@keyframes lit2{0%,28%{filter:none}38%,78%{filter:drop-shadow(0 0 10px #06CC3B) brightness(4)}100%{filter:none}}
+@keyframes lit3{0%,46%{filter:none}56%,78%{filter:drop-shadow(0 0 10px #06CC3B) brightness(4)}100%{filter:none}}
 /* billboard minis */
 .pin{position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;animation:blink 4.5s steps(1) infinite}
 .pin.p1{left:22%;top:30%}.pin.p2{left:52%;top:58%;animation-delay:1.5s}.pin.p3{left:72%;top:26%;animation-delay:3s}
@@ -130,9 +138,9 @@ header,section{display:flex;flex-direction:column;gap:22px}
 
 <header>
   <p class="brand">HUS <span>OFFICE</span></p>
-  <p class="eyebrow">خريطة الموقع المقترح</p>
-  <h1>مساران، وكل مسار ينتهي <span class="hl">بطلب على واتساب</span></h1>
-  <p class="lead">الزائر يدخل من الصفحة الرئيسية ويختار ما يريد: لوحة أو شاشة إعلانية، أو خدمة طباعة. النقطة الخضراء هي الزائر وهو يتحرك في الموقع.</p>
+  <p class="eyebrow">خريطة موقع ريادة المقترح</p>
+  <h1>ثلاث خدمات، وكل مسار ينتهي <span class="hl">بطلب على واتساب</span></h1>
+  <p class="lead">الزائر يدخل من الصفحة الرئيسية ويختار ما يريد: لوحة إعلانية، شاشة رقمية، أو خدمة طباعة. النقطة الخضراء هي الزائر وهو يتحرك في الموقع.</p>
 </header>
 
 <section>
@@ -141,15 +149,22 @@ header,section{display:flex;flex-direction:column;gap:22px}
     <div class="stem" style="animation-delay:.3s"></div>
     <div class="fork">
       <div class="path">
-        <span class="tag">مسار المعلن</span>
-        <div class="node">اللوحات والشاشات<small>خريطة بكل المواقع</small></div><div class="stem"></div>
+        <span class="tag">اللوحات الإعلانية</span>
+        <div class="node">خريطة اللوحات<small>كل المواقع في بغداد</small></div><div class="stem"></div>
         <div class="node">صفحة اللوحة<small>صور، قياس، متاحة أو محجوزة</small></div><div class="stem"></div>
         <div class="node">جرّب إعلانك<small>شاهده على اللوحة</small></div><div class="stem"></div>
         <div class="node wa">احجز على واتساب<small style="color:var(--ink)">برقم اللوحة</small></div>
       </div>
       <div class="path">
-        <span class="tag">مسار زبون الطباعة</span>
-        <div class="node">خدمة الطباعة<small>فلكس، ستيكر، بوستر، كروت</small></div><div class="stem"></div>
+        <span class="tag">الشاشات الرقمية</span>
+        <div class="node">خريطة الشاشات<small>مواقع الشاشات وأحجامها</small></div><div class="stem"></div>
+        <div class="node">صفحة الشاشة<small>القياس، أوقات العرض</small></div><div class="stem"></div>
+        <div class="node">جرّب إعلانك<small>فيديو أو صورة على الشاشة</small></div><div class="stem"></div>
+        <div class="node wa">احجز على واتساب<small style="color:var(--ink)">برقم الشاشة والمدة</small></div>
+      </div>
+      <div class="path">
+        <span class="tag">خدمات الطباعة</span>
+        <div class="node">المنتجات<small>فلكس، ستيكر، بوستر، كروت</small></div><div class="stem"></div>
         <div class="node">القياس والكمية<small>السعر يظهر فوراً</small></div><div class="stem"></div>
         <div class="node">ملف التصميم<small>ارفعه أو اطلب تصميماً</small></div><div class="stem"></div>
         <div class="node wa">اطلب على واتساب<small style="color:var(--ink)">بكل تفاصيل الطلب</small></div>
@@ -163,32 +178,32 @@ header,section{display:flex;flex-direction:column;gap:22px}
   <p class="eyebrow">الصفحة الرئيسية</p>
   <h2>ماذا يتحرك عندما ينزل الزائر في الصفحة</h2>
   <div class="rows">
-    <div class="row"><div class="mini"><div class="world"></div><div class="sun"></div><div class="thumb"></div></div>
-      <div class="txt"><span class="num">01</span><h3>المشهد يتبدل خلف المنتج</h3><p>المنتج ثابت في الوسط، والعالم خلفه يتغير مع التمرير. في موقعكم: شوارع بغداد ليلاً ولوحاتكم تضيء.</p></div></div>
-    <div class="row"><div class="mini"><div class="lid"></div><div class="case"></div><div class="bud a"></div><div class="bud b"></div><div class="thumb"></div></div>
-      <div class="txt"><span class="num">02</span><h3>المنتج ينفتح</h3><p>كلما نزل الزائر، ينفتح المنتج أمامه. وإذا صعد، ينغلق.</p><a class="try" href="../">شاهد النموذج</a></div></div>
+    <div class="row"><div class="mini"><div class="street"><i></i><i></i><i></i></div><div class="thumb"></div></div>
+      <div class="txt"><span class="num">01</span><h3>شارع بغداد يضيء</h3><p>الكاميرا تتقدم في شارع ليلي، ولوحات ريادة وشاشاتها تضيء واحدة بعد الأخرى مع التمرير.</p></div></div>
     <div class="row"><div class="mini"><div class="layer l1"></div><div class="layer l2"></div><div class="layer l3"></div><div class="layer l4"></div><div class="thumb"></div></div>
-      <div class="txt"><span class="num">03</span><h3>يتفكك إلى طبقاته</h3><p>كل قطعة تنفصل ويظهر اسمها. في موقعكم: الشاشة الإعلانية تتفكك إلى الهيكل والألواح والإعلان.</p></div></div>
-    <div class="row"><div class="mini colour"><div class="prod"></div><div class="thumb"></div></div>
-      <div class="txt"><span class="num">04</span><h3>الصفحة كلها تغيّر لونها</h3><p>باختيار واحد يتغير المنتج والخلفية وزر الطلب. في موقعكم: النظام نفسه بهوية ريادة أو هوية البعد المرئي.</p></div></div>
+      <div class="txt"><span class="num">02</span><h3>الشاشة تتفكك</h3><p>الشاشة الإعلانية تنفصل إلى طبقاتها: الهيكل، الألواح، ثم الإعلان نفسه. تبيّن جودة ما تركّبونه.</p></div></div>
+    <div class="row"><div class="mini"><div class="tiles"><i></i><i></i><i></i></div><div class="thumb"></div></div>
+      <div class="txt"><span class="num">03</span><h3>اختر خدمتك</h3><p>ثلاث بطاقات: لوحات، شاشات، طباعة. كل بطاقة تفتح مسارها.</p></div></div>
+    <div class="row"><div class="mini"><div class="chat"><i></i><i></i><i></i></div><div class="thumb"></div></div>
+      <div class="txt"><span class="num">04</span><h3>زر واتساب دائماً أمامه</h3><p>شريط ثابت أسفل الشاشة في كل الصفحات، يفتح المحادثة مباشرة.</p></div></div>
   </div>
 </section>
 
 <section>
-  <p class="eyebrow">مسار المعلن</p>
+  <p class="eyebrow">اللوحات والشاشات</p>
   <h2>من الخريطة إلى الحجز</h2>
   <div class="rows">
     <div class="row"><div class="mini"><div class="roads"></div><div class="pin p1"></div><div class="pin p2"></div><div class="pin p3"></div></div>
       <div class="txt"><span class="num">01</span><h3>خريطة بكل اللوحات والشاشات</h3><p>المعلن يرى مواقعكم على الخريطة ويضغط على أي لوحة ليعرف قياسها وحالتها.</p></div></div>
     <div class="row"><div class="mini"><div class="board"></div><div class="leg a"></div><div class="leg b"></div></div>
-      <div class="txt"><span class="num">02</span><h3>جرّب إعلانك على اللوحة</h3><p>يرفع تصميمه فيظهر على صورة اللوحة الحقيقية قبل أن يحجز.</p></div></div>
+      <div class="txt"><span class="num">02</span><h3>جرّب إعلانك على اللوحة أو الشاشة</h3><p>يرفع تصميمه أو فيديو إعلانه، فيظهر على صورة الموقع الحقيقية قبل أن يحجز.</p></div></div>
     <div class="row"><div class="mini"><div class="chat"><i></i><i></i><i></i></div></div>
-      <div class="txt"><span class="num">03</span><h3>احجز هذا الموقع</h3><p>زر واحد يفتح واتساب برسالة جاهزة فيها رقم اللوحة.</p></div></div>
+      <div class="txt"><span class="num">03</span><h3>احجز هذا الموقع</h3><p>زر واحد يفتح واتساب برسالة جاهزة فيها رقم اللوحة أو الشاشة والمدة المطلوبة.</p></div></div>
   </div>
 </section>
 
 <section>
-  <p class="eyebrow">مسار زبون الطباعة</p>
+  <p class="eyebrow">خدمات الطباعة</p>
   <h2>من المنتج إلى الطلب، بدون اتصال</h2>
   <div class="rows">
     <div class="row"><div class="mini"><div class="tiles"><i></i><i></i><i></i></div></div>
@@ -205,7 +220,7 @@ header,section{display:flex;flex-direction:column;gap:22px}
 </section>
 
 <section>
-  <p class="eyebrow">النماذج الحيّة</p>
+  <p class="eyebrow">نماذج حيّة بنفس الأسلوب</p>
   <div class="links">
     <a href="../"><b>نبض</b><span>منتج ثلاثي الأبعاد ينفتح ويتفكك</span></a>
     <a href="../print/"><b>اطبع</b><span>حاسبة سعر الطباعة والطلب</span></a>
