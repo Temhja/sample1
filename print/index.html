@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>اطبع · طلب طباعة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* layout: two columns on desktop (choices, live price card); one column on phones with the price pinned at the bottom */
+  --paper:#FAFAF7; --ink:#14161A; --soft:#62666E; --line:#E2E3DF; --card:#FFFFFF; --c:#00A6D6; --m:#E6007E; --y:#FFD400;
+  --body:"Readex Pro",Tahoma,sans-serif; color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+h1,h2,p{margin:0}
+.cmyk{height:6px;background:linear-gradient(to left,var(--c) 0 25%,var(--m) 25% 50%,var(--y) 50% 75%,var(--ink) 75%)}
+header{max-width:1080px;margin:0 auto;padding:22px 20px 0;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:24px}
+.logo small{font-weight:300;font-size:13px;color:var(--soft);margin-inline-start:8px;letter-spacing:.14em}
+.tel{color:var(--soft);font-size:14px;direction:ltr}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 120px;display:grid;grid-template-columns:1.5fr 1fr;gap:28px;align-items:start}
+.intro{grid-column:1/-1;display:flex;flex-direction:column;gap:6px}
+h1{font-size:clamp(30px,5vw,52px);font-weight:700;line-height:1.2}
+.intro p{color:var(--soft);max-width:52ch}
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+.step h2{font-size:17px;font-weight:700;margin-bottom:14px;display:flex;gap:10px;align-items:center}
+.step h2 i{font-style:normal;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;display:grid;place-items:center}
+.prods{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.prod{border:1.5px solid var(--line);background:var(--paper);border-radius:14px;padding:14px 12px;text-align:start;font:500 15px var(--body);color:var(--ink);cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.prod small{color:var(--soft);font-weight:300;font-size:12px}
+.prod[aria-pressed="true"]{border-color:var(--ink);background:#fff;box-shadow:inset 0 -4px 0 var(--m)}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}
+label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--soft)}
+input[type=number],select{font:500 18px var(--body);padding:11px 12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);width:100%}
+input:focus-visible,select:focus-visible,.prod:focus-visible,.go:focus-visible,.file:focus-within{outline:2px solid var(--c);outline-offset:2px}
+.file{display:flex;align-items:center;gap:12px;border:1.5px dashed #BFC2BC;border-radius:14px;padding:16px;cursor:pointer;color:var(--soft)}
+.file input{position:absolute;opacity:0;width:1px;height:1px}
+.file b{color:var(--ink);font-weight:500}
+.sum{position:sticky;top:20px;background:var(--ink);color:#fff;border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.sum .row{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:#C9CCD2}
+.sum .row b{color:#fff;font-weight:500}
+.price{font-size:44px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.price small{font-size:16px;font-weight:300;color:#C9CCD2}
+.go{display:block;text-align:center;background:var(--y);color:var(--ink);font-weight:700;font-size:17px;text-decoration:none;border-radius:999px;padding:15px}
+.note{font-size:12px;color:#9EA2AA}
+footer{max-width:1080px;margin:0 auto;padding:0 20px 40px;color:var(--soft);font-size:13px}
+@media (max-width:800px){
+  .wrap{grid-template-columns:1fr;padding-bottom:210px}
+  .sum{position:fixed;inset-inline:12px;bottom:12px;top:auto;padding:16px 18px;gap:8px;z-index:5}
+  .sum .row.x{display:none}
+  .price{font-size:30px}
+}
+</style>
+</head>
+<body>
+<div class="cmyk"></div>
+<header><div class="logo">اطبع <small>PRINT</small></div><div class="tel"><a href="../" style="color:inherit;margin-inline-end:14px" dir="rtl">→ نبض</a>0773 679 7122</div></header>
+<main class="wrap">
+  <div class="intro"><h1>اعرف السعر واطلب، بدون اتصال.</h1><p>اختار المنتج، اكتب القياس والكمية، والسعر يطلع فوراً. الطلب يوصلنا على واتساب بكل التفاصيل.</p></div>
+  <div class="steps">
+    <section class="step"><h2><i>1</i>المنتج</h2><div class="prods" id="prods" role="group" aria-label="المنتج"></div></section>
+    <section class="step"><h2><i>2</i>القياس والكمية</h2>
+      <div class="fields">
+        <label id="lw" for="w">العرض (سم)<input id="w" type="number" inputmode="numeric" min="10" value="200"></label>
+        <label id="lh" for="h">الارتفاع (سم)<input id="h" type="number" inputmode="numeric" min="10" value="100"></label>
+        <label for="q">الكمية<input id="q" type="number" inputmode="numeric" min="1" value="1"></label>
+        <label for="d">الاستلام<select id="d"><option value="0">من المطبعة</option><option value="5000">توصيل داخل بغداد</option></select></label>
+      </div>
+    </section>
+    <section class="step"><h2><i>3</i>ملف التصميم</h2>
+      <label class="file" for="f"><input id="f" type="file" accept=".pdf,.ai,.psd,.png,.jpg,.jpeg"><span id="fn"><b>اختار ملفك</b> PDF أو AI أو صورة. أو اتركه ونصممه إلك.</span></label>
+    </section>
+  </div>
+  <aside class="sum" aria-live="polite">
+    <div class="row x"><span>المنتج</span><b id="sp"></b></div>
+    <div class="row x"><span>التفاصيل</span><b id="sd"></b></div>
+    <div class="price"><span id="pr">0</span> <small>د.ع</small></div>
+    <a class="go" id="go" target="_blank" rel="noopener" href="https://wa.me/9647736797122">أرسل الطلب على واتساب</a>
+    <p class="note">أسعار تجريبية لغرض العرض. ترسل ملف التصميم داخل محادثة واتساب.</p>
+  </aside>
+</main>
+<footer>نموذج تجريبي من تنفيذ HUS Office.</footer>
+<script>
+(function(){
+  var P=[
+    {id:'flex',n:'فلكس',s:'لوحات ولافتات',m2:6000},
+    {id:'sticker',n:'ستيكر',s:'واجهات وسيارات',m2:9000},
+    {id:'poster',n:'بوستر',s:'ورق مصقول',m2:5000},
+    {id:'cards',n:'كروت شخصية',s:'كل 1000 كرت',unit:25000},
+    {id:'rollup',n:'رول أب',s:'85 × 200 سم',unit:35000}
+  ];
+  var cur=P[0], $=function(i){return document.getElementById(i)};
+  var box=$('prods'), fileName='';
+  P.forEach(function(p){
+    var b=document.createElement('button');b.type='button';b.className='prod';b.id='p-'+p.id;
+    b.innerHTML=p.n+'<small>'+p.s+'</small>';b.setAttribute('aria-pressed',p===cur);
+    b.addEventListener('click',function(){cur=p;[].forEach.call(box.children,function(c){c.setAttribute('aria-pressed',c===b)});calc()});
+    box.appendChild(b);
+  });
+  function num(i,min){var v=parseFloat($(i).value);return isFinite(v)&&v>=min?v:min}
+  function calc(){
+    var area=!!cur.m2; $('lw').style.display=$('lh').style.display=area?'':'none';
+    var q=Math.round(num('q',1)), w=num('w',10), h=num('h',10), del=+$('d').value;
+    var price, det;
+    if(area){var m=w*h/10000; price=Math.max(5000,Math.ceil(m*cur.m2/250)*250)*q; det=w+' × '+h+' سم · '+q+' قطعة'}
+    else{price=cur.unit*q; det=cur.id==='cards'?(q*1000).toLocaleString('en')+' كرت':q+' قطعة'}
+    price+=del;
+    $('sp').textContent=cur.n; $('sd').textContent=det+(del?' · توصيل':'');
+    $('pr').textContent=price.toLocaleString('en');
+    var t='طلب طباعة\nالمنتج: '+cur.n+'\nالتفاصيل: '+det+'\nالاستلام: '+(del?'توصيل داخل بغداد':'من المطبعة')+'\nالسعر التقريبي: '+price.toLocaleString('en')+' د.ع'+(fileName?'\nالملف: '+fileName+' (أرسله هنا)':'\nأحتاج تصميم');
+    $('go').href='https://wa.me/9647736797122?text='+encodeURIComponent(t);
+  }
+  ['w','h','q','d'].forEach(function(i){$(i).addEventListener('input',calc)});
+  $('f').addEventListener('change',function(){fileName=this.files[0]?this.files[0].name:'';$('fn').innerHTML=fileName?'<b>'+fileName.replace(/[<>&]/g,'')+'</b> جاهز. ترسله ويا الطلب على واتساب.':'<b>اختار ملفك</b> PDF أو AI أو صورة.';calc()});
+  calc();
+})();
+</script>
+</body>
+</html>
