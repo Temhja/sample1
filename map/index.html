@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>خريطة الموقع</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* layout: one column; the map as two animated paths that both end at WhatsApp, then each path explained step by step with a live miniature */
+  --paper:#FFFFFF; --ink:#121412; --soft:#4A514B; --line:#DADDD8; --tile:#F3F4F2; --stage:#121412; --hl:#06CC3B;
+  --f:"Readex Pro",Tahoma,sans-serif; color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--f);font-size:17px;line-height:1.7}
+.wrap{max-width:1080px;margin:0 auto;padding:48px 20px 90px;display:flex;flex-direction:column;gap:72px}
+h1,h2,h3,p{margin:0}
+h1{font-size:clamp(36px,6.4vw,68px);line-height:1.15;font-weight:700;text-wrap:balance}
+h2{font-size:clamp(26px,3.8vw,38px);line-height:1.25;font-weight:700;text-wrap:balance}
+h3{font-size:20px;font-weight:700;line-height:1.3}
+.brand{font-weight:700;letter-spacing:.04em;direction:ltr;text-align:right}
+.brand span{color:var(--hl)}
+.eyebrow{font-size:14px;font-weight:500;color:var(--soft);letter-spacing:.04em}
+.hl{background:linear-gradient(transparent 62%,var(--hl) 62%)}
+.lead{font-size:19px;color:var(--soft);font-weight:300;max-width:60ch}
+header,section{display:flex;flex-direction:column;gap:22px}
+
+/* the map */
+.map{display:flex;flex-direction:column;align-items:center}
+.node{border:2px solid var(--ink);border-radius:14px;padding:10px 20px;font-weight:700;background:var(--paper);text-align:center;line-height:1.35;animation:pop .5s ease both;min-width:150px}
+.node small{display:block;font-weight:300;font-size:13px;color:var(--soft)}
+.node.home{background:var(--ink);color:#fff;font-size:20px;padding:14px 34px}
+.node.home small{color:#B9C2BB}
+.node.wa{border-color:var(--hl);background:var(--hl);animation:pop .5s ease both,pulse 2.4s ease-in-out 2.6s infinite}
+.stem{position:relative;width:2px;height:34px;background:var(--ink);transform-origin:top;animation:grow .4s ease both}
+.stem::after{content:"";position:absolute;left:-4px;top:0;width:10px;height:10px;border-radius:50%;background:var(--hl);animation:travel 2.2s linear infinite;animation-delay:inherit}
+.fork{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,6vw,90px);padding-top:34px;width:min(720px,100%)}
+.fork::before{content:"";position:absolute;top:0;left:25%;right:25%;height:2px;background:var(--ink);transform-origin:center;animation:growx .6s ease both .5s}
+.path{display:flex;flex-direction:column;align-items:center;position:relative}
+.path::before{content:"";position:absolute;top:-34px;width:2px;height:34px;background:var(--ink);transform-origin:top;animation:grow .3s ease both 1s}
+.path .tag{font-size:13px;font-weight:500;color:var(--soft);margin-bottom:8px}
+.path>*:nth-child(2){animation-delay:1.2s}.path>*:nth-child(3){animation-delay:1.4s}.path>*:nth-child(4){animation-delay:1.6s}
+.path>*:nth-child(5){animation-delay:1.8s}.path>*:nth-child(6){animation-delay:2s}.path>*:nth-child(7){animation-delay:2.2s}
+.path>*:nth-child(8){animation-delay:2.4s}.path>*:nth-child(9){animation-delay:2.6s}.path>*:nth-child(10){animation-delay:2.8s}
+.extra{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:34px}
+.extra span{border:1.5px solid var(--line);border-radius:999px;padding:6px 16px;font-size:14px;color:var(--soft)}
+@keyframes pop{from{transform:scale(.88)}to{transform:scale(1)}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes growx{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes travel{0%{top:-4px;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:calc(100% - 6px);opacity:0}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(6,204,59,.5)}50%{box-shadow:0 0 0 14px rgba(6,204,59,0)}}
+
+/* step rows */
+.rows{display:flex;flex-direction:column;gap:14px}
+.row{display:grid;grid-template-columns:260px 1fr;gap:24px;background:var(--tile);border-radius:18px;padding:16px;align-items:center}
+.row .txt{display:flex;flex-direction:column;gap:6px}
+.row p{color:var(--soft);font-weight:300;max-width:56ch}
+.num{font-size:13px;font-weight:700;color:var(--soft);direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.try{align-self:flex-start;font-weight:700;text-decoration:none;color:var(--ink);border-bottom:3px solid var(--hl);margin-top:4px}
+.try:focus-visible{outline:2px solid var(--hl);outline-offset:3px}
+@media (max-width:700px){.row{grid-template-columns:1fr}.node{min-width:0;padding:9px 12px;font-size:15px}.node.home{font-size:18px}}
+
+.mini{position:relative;height:170px;border-radius:12px;background:var(--stage);overflow:hidden;direction:ltr}
+.thumb{position:absolute;right:8px;top:10px;bottom:10px;width:4px;border-radius:4px;background:#2E332F}
+.thumb::after{content:"";position:absolute;left:0;width:4px;height:34px;border-radius:4px;background:var(--hl);animation:scroll 6s ease-in-out infinite}
+@keyframes scroll{0%,8%{top:0}60%,78%{top:calc(100% - 34px)}100%{top:0}}
+/* scroll minis */
+.case{position:absolute;left:50%;top:86px;width:96px;height:52px;margin-left:-48px;border-radius:14px;background:#F4F5F2}
+.lid{position:absolute;left:50%;top:60px;width:96px;height:30px;margin-left:-48px;border-radius:14px 14px 4px 4px;background:#D5D8D3;transform-origin:50% 100%;animation:lid 6s ease-in-out infinite}
+.bud{position:absolute;top:80px;width:16px;height:22px;border-radius:9px;background:#fff;animation:bud 6s ease-in-out infinite}
+.bud.a{left:calc(50% - 26px)}.bud.b{left:calc(50% + 10px)}
+@keyframes lid{0%,8%{transform:none}60%,78%{transform:translateY(-34px) rotate(-14deg)}100%{transform:none}}
+@keyframes bud{0%,20%{transform:translateY(8px)}60%,78%{transform:translateY(-34px)}100%{transform:translateY(8px)}}
+.layer{position:absolute;left:50%;width:110px;height:16px;margin-left:-55px;border-radius:8px;background:#F4F5F2;top:77px;animation:6s ease-in-out infinite}
+.l1{animation-name:e1}.l2{animation-name:e2;background:#D5D8D3;width:90px;margin-left:-45px}.l3{animation-name:e3;background:#9AA19B;width:70px;margin-left:-35px}.l4{animation-name:e4}
+@keyframes e1{0%,8%{transform:translateY(-9px)}60%,78%{transform:translateY(-54px)}100%{transform:translateY(-9px)}}
+@keyframes e2{0%,8%{transform:translateY(-3px)}60%,78%{transform:translateY(-20px)}100%{transform:translateY(-3px)}}
+@keyframes e3{0%,8%{transform:translateY(3px)}60%,78%{transform:translateY(16px)}100%{transform:translateY(3px)}}
+@keyframes e4{0%,8%{transform:translateY(9px)}60%,78%{transform:translateY(52px)}100%{transform:translateY(9px)}}
+.colour{animation:bg 6s linear infinite}
+.prod{position:absolute;left:50%;top:50%;width:64px;height:84px;margin:-42px 0 0 -32px;border-radius:22px;animation:pc 6s linear infinite}
+@keyframes bg{0%,28%{background:#121412}33%,61%{background:#D9D3C7}66%,95%{background:#132457}100%{background:#121412}}
+@keyframes pc{0%,28%{background:#3A403B}33%,61%{background:#F7F4EE}66%,95%{background:#2F55C8}100%{background:#3A403B}}
+.world{position:absolute;inset:0;animation:wd 6s linear infinite}
+.sun{position:absolute;left:50%;top:50%;width:70px;height:44px;margin:-22px 0 0 -35px;border-radius:22px 22px 10px 10px;background:#fff;transform:rotate(-12deg)}
+@keyframes wd{0%,28%{background:linear-gradient(#C98A2B,#2F5E2A)}33%,61%{background:linear-gradient(#6B4FA3,#1E3A5C)}66%,95%{background:linear-gradient(#E9A07A,#B9834F)}100%{background:linear-gradient(#C98A2B,#2F5E2A)}}
+/* print minis */
+.tiles{position:absolute;inset:44px 30px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tiles i{border-radius:10px;background:#2E332F;animation:pick 4.5s steps(1) infinite}
+.tiles i:nth-child(2){animation-delay:1.5s}.tiles i:nth-child(3){animation-delay:3s}
+@keyframes pick{0%{background:#fff;box-shadow:inset 0 -6px 0 var(--hl)}33%,100%{background:#2E332F;box-shadow:none}}
+.rect{position:absolute;left:50%;top:50%;border:3px solid #fff;border-radius:6px;transform:translate(-50%,-50%);animation:size 4.5s ease-in-out infinite}
+.rect::before{content:"";position:absolute;left:0;right:0;bottom:-14px;height:3px;background:var(--hl)}
+.rect::after{content:"";position:absolute;top:0;bottom:0;right:-14px;width:3px;background:var(--hl)}
+@keyframes size{0%,10%{width:50px;height:36px}45%,60%{width:150px;height:60px}85%,100%{width:90px;height:96px}}
+.price{position:absolute;left:36px;right:36px;top:54px;height:62px;border-radius:14px;background:#fff;overflow:hidden;font:700 34px/62px var(--f);color:var(--ink);text-align:center;font-variant-numeric:tabular-nums}
+.price span{display:block;animation:roll 4.5s cubic-bezier(.6,0,.2,1) infinite}
+@keyframes roll{0%,20%{transform:translateY(0)}35%,55%{transform:translateY(-62px)}70%,100%{transform:translateY(-124px)}}
+.drop{position:absolute;left:50%;bottom:28px;width:130px;height:70px;margin-left:-65px;border:3px dashed #5A605B;border-radius:12px}
+.doc{position:absolute;left:50%;top:14px;width:40px;height:52px;margin-left:-20px;border-radius:6px;background:#fff;animation:fall 4.5s ease-in-out infinite}
+.doc::after{content:"";position:absolute;left:8px;right:8px;top:12px;height:4px;background:#C9CDC7;box-shadow:0 10px 0 #C9CDC7,0 20px 0 #C9CDC7}
+@keyframes fall{0%,15%{transform:translateY(-10px) rotate(-8deg)}50%,85%{transform:translateY(62px) rotate(0)}100%{transform:translateY(-10px) rotate(-8deg)}}
+.chat{position:absolute;inset:26px 40px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px}
+.chat i{height:26px;border-radius:13px 13px 4px 13px;background:var(--hl);align-self:flex-end;animation:send 4.5s ease infinite}
+.chat i:nth-child(1){width:70%;animation-delay:.3s}.chat i:nth-child(2){width:50%;animation-delay:.9s}.chat i:nth-child(3){width:60%;height:34px;background:#fff;align-self:flex-start;border-radius:13px 13px 13px 4px;animation-delay:2s}
+@keyframes send{0%,5%{transform:translateY(30px) scale(.6);opacity:0}15%,88%{transform:none;opacity:1}100%{opacity:0}}
+/* billboard minis */
+.pin{position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;animation:blink 4.5s steps(1) infinite}
+.pin.p1{left:22%;top:30%}.pin.p2{left:52%;top:58%;animation-delay:1.5s}.pin.p3{left:72%;top:26%;animation-delay:3s}
+.roads{position:absolute;inset:0;background:linear-gradient(8deg,transparent 48%,#2E332F 48% 52%,transparent 52%),linear-gradient(98deg,transparent 46%,#2E332F 46% 50%,transparent 50%)}
+@keyframes blink{0%{background:var(--hl);box-shadow:0 0 0 8px rgba(6,204,59,.3)}33%,100%{background:#fff;box-shadow:none}}
+.board{position:absolute;left:50%;top:26px;width:150px;height:76px;margin-left:-75px;border-radius:6px;background:#2E332F;overflow:hidden}
+.board::after{content:"";position:absolute;inset:8px;border-radius:3px;background:linear-gradient(120deg,var(--hl),#fff);animation:ad 4.5s ease-in-out infinite}
+.leg{position:absolute;top:102px;width:6px;height:44px;background:#5A605B}.leg.a{left:calc(50% - 40px)}.leg.b{left:calc(50% + 34px)}
+@keyframes ad{0%,20%{transform:translateY(-110%)}45%,85%{transform:none}100%{transform:translateY(-110%)}}
+
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.links a{border:2px solid var(--ink);border-radius:18px;padding:20px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px}
+.links a b{font-size:22px}
+.links a span{color:var(--soft);font-weight:300;font-size:15px}
+.links a:focus-visible{outline:3px solid var(--hl);outline-offset:3px}
+.foot{color:var(--soft);font-size:13px;border-top:1px solid var(--line);padding-top:18px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="brand">HUS <span>OFFICE</span></p>
+  <p class="eyebrow">خريطة الموقع المقترح</p>
+  <h1>مساران، وكل مسار ينتهي <span class="hl">بطلب على واتساب</span></h1>
+  <p class="lead">الزائر يدخل من الصفحة الرئيسية ويختار ما يريد: لوحة أو شاشة إعلانية، أو خدمة طباعة. النقطة الخضراء هي الزائر وهو يتحرك في الموقع.</p>
+</header>
+
+<section>
+  <div class="map">
+    <div class="node home">الصفحة الرئيسية<small>فيديو يتحرك مع التمرير</small></div>
+    <div class="stem" style="animation-delay:.3s"></div>
+    <div class="fork">
+      <div class="path">
+        <span class="tag">مسار المعلن</span>
+        <div class="node">اللوحات والشاشات<small>خريطة بكل المواقع</small></div><div class="stem"></div>
+        <div class="node">صفحة اللوحة<small>صور، قياس، متاحة أو محجوزة</small></div><div class="stem"></div>
+        <div class="node">جرّب إعلانك<small>شاهده على اللوحة</small></div><div class="stem"></div>
+        <div class="node wa">احجز على واتساب<small style="color:var(--ink)">برقم اللوحة</small></div>
+      </div>
+      <div class="path">
+        <span class="tag">مسار زبون الطباعة</span>
+        <div class="node">خدمة الطباعة<small>فلكس، ستيكر، بوستر، كروت</small></div><div class="stem"></div>
+        <div class="node">القياس والكمية<small>السعر يظهر فوراً</small></div><div class="stem"></div>
+        <div class="node">ملف التصميم<small>ارفعه أو اطلب تصميماً</small></div><div class="stem"></div>
+        <div class="node wa">اطلب على واتساب<small style="color:var(--ink)">بكل تفاصيل الطلب</small></div>
+      </div>
+    </div>
+    <div class="extra"><span>من نحن</span><span>أعمالنا</span><span>عملاؤنا</span><span>تواصل معنا</span></div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">الصفحة الرئيسية</p>
+  <h2>ماذا يتحرك عندما ينزل الزائر في الصفحة</h2>
+  <div class="rows">
+    <div class="row"><div class="mini"><div class="world"></div><div class="sun"></div><div class="thumb"></div></div>
+      <div class="txt"><span class="num">01</span><h3>المشهد يتبدل خلف المنتج</h3><p>المنتج ثابت في الوسط، والعالم خلفه يتغير مع التمرير. في موقعكم: شوارع بغداد ليلاً ولوحاتكم تضيء.</p></div></div>
+    <div class="row"><div class="mini"><div class="lid"></div><div class="case"></div><div class="bud a"></div><div class="bud b"></div><div class="thumb"></div></div>
+      <div class="txt"><span class="num">02</span><h3>المنتج ينفتح</h3><p>كلما نزل الزائر، ينفتح المنتج أمامه. وإذا صعد، ينغلق.</p><a class="try" href="../">شاهد النموذج</a></div></div>
+    <div class="row"><div class="mini"><div class="layer l1"></div><div class="layer l2"></div><div class="layer l3"></div><div class="layer l4"></div><div class="thumb"></div></div>
+      <div class="txt"><span class="num">03</span><h3>يتفكك إلى طبقاته</h3><p>كل قطعة تنفصل ويظهر اسمها. في موقعكم: الشاشة الإعلانية تتفكك إلى الهيكل والألواح والإعلان.</p></div></div>
+    <div class="row"><div class="mini colour"><div class="prod"></div><div class="thumb"></div></div>
+      <div class="txt"><span class="num">04</span><h3>الصفحة كلها تغيّر لونها</h3><p>باختيار واحد يتغير المنتج والخلفية وزر الطلب. في موقعكم: النظام نفسه بهوية ريادة أو هوية البعد المرئي.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">مسار المعلن</p>
+  <h2>من الخريطة إلى الحجز</h2>
+  <div class="rows">
+    <div class="row"><div class="mini"><div class="roads"></div><div class="pin p1"></div><div class="pin p2"></div><div class="pin p3"></div></div>
+      <div class="txt"><span class="num">01</span><h3>خريطة بكل اللوحات والشاشات</h3><p>المعلن يرى مواقعكم على الخريطة ويضغط على أي لوحة ليعرف قياسها وحالتها.</p></div></div>
+    <div class="row"><div class="mini"><div class="board"></div><div class="leg a"></div><div class="leg b"></div></div>
+      <div class="txt"><span class="num">02</span><h3>جرّب إعلانك على اللوحة</h3><p>يرفع تصميمه فيظهر على صورة اللوحة الحقيقية قبل أن يحجز.</p></div></div>
+    <div class="row"><div class="mini"><div class="chat"><i></i><i></i><i></i></div></div>
+      <div class="txt"><span class="num">03</span><h3>احجز هذا الموقع</h3><p>زر واحد يفتح واتساب برسالة جاهزة فيها رقم اللوحة.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">مسار زبون الطباعة</p>
+  <h2>من المنتج إلى الطلب، بدون اتصال</h2>
+  <div class="rows">
+    <div class="row"><div class="mini"><div class="tiles"><i></i><i></i><i></i></div></div>
+      <div class="txt"><span class="num">01</span><h3>يختار المنتج</h3><p>فلكس، ستيكر، بوستر، كروت شخصية، رول أب. كل منتج ببطاقة واضحة.</p></div></div>
+    <div class="row"><div class="mini"><div class="rect"></div></div>
+      <div class="txt"><span class="num">02</span><h3>يكتب القياس والكمية</h3><p>العرض والارتفاع بالسنتيمتر، وعدد القطع.</p></div></div>
+    <div class="row"><div class="mini"><div class="price"><span>12,000</span><span>27,000</span><span>54,000</span></div></div>
+      <div class="txt"><span class="num">03</span><h3>السعر يظهر فوراً</h3><p>يتغير مع كل رقم يكتبه. أسعاركم تعدّلونها أنتم من صفحة الإدارة.</p></div></div>
+    <div class="row"><div class="mini"><div class="doc"></div><div class="drop"></div></div>
+      <div class="txt"><span class="num">04</span><h3>يضيف ملف التصميم</h3><p>يرفع ملفه، أو يطلب تصميماً من فريقكم.</p></div></div>
+    <div class="row"><div class="mini"><div class="chat"><i></i><i></i><i></i></div></div>
+      <div class="txt"><span class="num">05</span><h3>يرسل الطلب على واتساب</h3><p>المنتج والقياس والكمية والسعر تصل مكتوبة لفريق المبيعات.</p><a class="try" href="../print/">جرّب نموذج الطباعة</a></div></div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">النماذج الحيّة</p>
+  <div class="links">
+    <a href="../"><b>نبض</b><span>منتج ثلاثي الأبعاد ينفتح ويتفكك</span></a>
+    <a href="../print/"><b>اطبع</b><span>حاسبة سعر الطباعة والطلب</span></a>
+  </div>
+  <p class="foot">نماذج تجريبية من تنفيذ HUS Office. العلامات والأسعار فيها غير حقيقية.</p>
+</section>
+
+</div>
+</body>
+</html>
